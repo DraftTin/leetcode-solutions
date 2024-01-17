@@ -1,54 +1,65 @@
-package main
+type Item struct {
+	effort, x, y int
+}
 
-import "math"
+type PriorityQueue []Item
+
+func (pq PriorityQueue) Len() int { return len(pq) }
+
+func (pq PriorityQueue) Less(i, j int) bool {
+	return pq[i].effort < pq[j].effort
+}
+
+func (pq PriorityQueue) Swap(i, j int) {
+	pq[i], pq[j] = pq[j], pq[i]
+}
+
+func (pq *PriorityQueue) Push(x interface{}) {
+	*pq = append(*pq, x.(Item))
+}
+
+func (pq *PriorityQueue) Pop() interface{} {
+	old := *pq
+	n := len(old)
+	item := old[n-1]
+	*pq = old[0 : n-1]
+	return item
+}
 
 func minimumEffortPath(heights [][]int) int {
-	n, m := len(heights), len(heights[0])
-	dp := make([][]int, n)
-	visited := make([][]bool, n)
-	visiting := make([][]bool, n)
-	for i := 0; i < n; i++ {
-		dp[i] = make([]int, m)
-		visited[i] = make([]bool, m)
-		visiting[i] = make([]bool, m)
+	rows, cols := len(heights), len(heights[0])
+	dist := make([][]int, rows)
+	for i := range dist {
+		dist[i] = make([]int, cols)
+		for j := range dist[i] {
+			dist[i][j] = math.MaxInt32
+		}
 	}
-	dfs(heights, 0, 0, dp, visited, visiting)
-	return dp[0][0]
-}
+	dist[0][0] = 0
+	directions := [][2]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
 
-func dfs(heights [][]int, row, col int, dp [][]int, visited, visiting [][]bool) {
-	if row == len(heights)-1 && col == len(heights[0])-1 {
-		return
-	}
-	if visited[row][col] {
-		return
-	}
-	visiting[row][col] = true
-	effort := math.MaxInt32
-	if row > 0 && visiting[row-1][col] == false {
-		dfs(heights, row-1, col, dp, visited, visiting)
-		effort = min(effort, max(dp[row-1][col], abs(heights[row][col], heights[row-1][col])))
-	}
-	if col > 0 && visiting[row][col-1] == false {
-		dfs(heights, row, col-1, dp, visited, visiting)
-		effort = min(effort, max(dp[row][col-1], abs(heights[row][col], heights[row][col-1])))
-	}
-	if row < len(heights)-1 && visiting[row+1][col] == false {
-		dfs(heights, row+1, col, dp, visited, visiting)
-		effort = min(effort, max(dp[row+1][col], abs(heights[row][col], heights[row+1][col])))
-	}
-	if col < len(heights[0])-1 && visiting[row][col+1] == false {
-		dfs(heights, row, col+1, dp, visited, visiting)
-		effort = min(effort, max(dp[row][col+1], abs(heights[row][col], heights[row][col+1])))
-	}
-	dp[row][col] = effort
-	visiting[row][col] = false
-	visited[row][col] = true
-}
+	pq := &PriorityQueue{Item{0, 0, 0}}
+	heap.Init(pq)
 
-func abs(a, b int) int {
-	if a > b {
-		return a - b
+	for pq.Len() > 0 {
+		item := heap.Pop(pq).(Item)
+		effort, x, y := item.effort, item.x, item.y
+		if effort > dist[x][y] {
+			continue
+		}
+		if x == rows-1 && y == cols-1 {
+			return effort
+		}
+		for _, dir := range directions {
+			nx, ny := x+dir[0], y+dir[1]
+			if nx >= 0 && nx < rows && ny >= 0 && ny < cols {
+				newEffort := int(math.Max(float64(effort), math.Abs(float64(heights[x][y]-heights[nx][ny]))))
+				if newEffort < dist[nx][ny] {
+					dist[nx][ny] = newEffort
+					heap.Push(pq, Item{newEffort, nx, ny})
+				}
+			}
+		}
 	}
-	return b - a
+	return -1
 }

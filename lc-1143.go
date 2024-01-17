@@ -1,31 +1,28 @@
 package main
 
 func longestCommonSubsequence(text1 string, text2 string) int {
-	n, m := len(text1), len(text2)
-	dp := make([][]int, n)
-	for i := 0; i < n; i++ {
-		dp[i] = make([]int, m)
+	dp := make([][]int, len(text1))
+	for i := 0; i < len(text1); i++ {
+		dp[i] = make([]int, len(text2))
 	}
-	if text1[0] == text2[0] {
-		dp[0][0] = 1
-	}
-	for i := 0; i < n; i++ {
-		for j := 0; j < m; j++ {
-			if text1[i] == text2[j] {
-				if i > 0 && j > 0 {
-					dp[i][j] = dp[i-1][j-1] + 1
-				} else {
-					dp[i][j] = 1
-				}
-			} else {
-				if i > 0 {
-					dp[i][j] = max(dp[i][j], dp[i-1][j])
-				}
-				if j > 0 {
-					dp[i][j] = max(dp[i][j], dp[i][j-1])
-				}
+	for i := 0; i < len(text1); i++ {
+		for j := 0; j < len(text2); j++ {
+			var n1, n2, n3 int
+			if i-1 >= 0 {
+				n1 = dp[i-1][j]
 			}
+			if j-1 >= 0 {
+				n2 = dp[i][j-1]
+			}
+			if i-1 >= 0 && j-1 >= 0 {
+				n3 = dp[i-1][j-1]
+			}
+			tmp := 0
+			if text1[i] == text2[j] {
+				tmp = 1
+			}
+			dp[i][j] = max(n1, n2, n3+tmp)
 		}
 	}
-	return dp[n-1][m-1]
+	return dp[len(text1)-1][len(text2)-1]
 }
