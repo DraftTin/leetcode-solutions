@@ -1,3 +1,5 @@
+package main
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -7,37 +9,36 @@
  * }
  */
 
+var ans *TreeNode
+
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
-	var ans *TreeNode
-	findTwoNodes(root, p, q, &ans)
+	f1, f2 := -1, -1
+	if root == p {
+		f1 = 0
+	} else if findNode(root.Left, p) == true {
+		f1 = 1
+	} else {
+		f1 = 2
+	}
+	if root == q {
+		f2 = 0
+	} else if findNode(root.Left, q) == true {
+		f2 = 1
+	} else {
+		f2 = 2
+	}
+	if f1 != f2 {
+		ans = root
+	}
 	return ans
 }
 
-func findTwoNodes(root, p, q *TreeNode, ans **TreeNode) (bool, bool) {
+func findNode(root *TreeNode, node *TreeNode) bool {
 	if root == nil {
-		return false, false
+		return false
 	}
-	found1, found2 := false, false
-	if root == p {
-		found1 = true
+	if root == node {
+		return true
 	}
-	if root == q {
-		found2 = true
-	}
-	f1, f2 := findTwoNodes(root.Left, p, q, ans)
-	if *ans != nil {
-		return true, true
-	}
-	found1 = found1 || f1
-	found2 = found2 || f2
-	f1, f2 = findTwoNodes(root.Right, p, q, ans)
-	if *ans != nil {
-		return true, true
-	}
-	found1 = found1 || f1
-	found2 = found2 || f2
-	if found1 && found2 {
-		*ans = root
-	}
-	return found1, found2
+	return findNode(root.Left, node) || findNode(root.Right, node)
 }
