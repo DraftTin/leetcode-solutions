@@ -1,0 +1,42 @@
+package main
+
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeZeroSumSublists(head *ListNode) *ListNode {
+	sta := []int{}
+	p := head
+	for p != nil {
+		if p.Val == 0 {
+			p = p.Next
+			continue
+		}
+		if len(sta) == 0 {
+			sta = append(sta, p.Val)
+			p = p.Next
+			continue
+		}
+		tmp := p.Val
+		i := len(sta) - 1
+		for i >= 0 && checkPositivity(tmp, sta[i]) == false {
+			tmp += sta[i]
+			if tmp == 0 {
+				sta = sta[:i]
+				break
+			}
+			i--
+		}
+		sta = append(sta, tmp)
+	}
+}
+
+func checkPositivity(num1, num2 int) bool {
+	if num1 > 0 && num2 > 0 || num1 < 0 && num2 < 0 {
+		return true
+	}
+	return false
+}
