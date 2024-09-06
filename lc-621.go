@@ -1,3 +1,5 @@
+package main
+
 func leastInterval(tasks []byte, n int) int {
 	mp := make(map[byte]int)
 	maxCount := 0
@@ -13,9 +15,3 @@ func leastInterval(tasks []byte, n int) int {
 	}
 	return max(ans, len(tasks))
 }
-
-// A B C
-// A B C
-// A B D
-// A B #
-// A
