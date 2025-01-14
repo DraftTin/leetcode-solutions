@@ -1,29 +1,10 @@
-type Counter = {
-  increment: () => number;
-  decrement: () => number;
-  reset: () => number;
-};
-
-function createCounter(init: number): Counter {
-  let initVal = init;
-  let curVal = init;
-
-  return {
-    increment() {
-      return ++curVal;
-    },
-    decrement() {
-      return --curVal;
-    },
-    reset() {
-      return (curVal = initVal);
-    },
+function createHelloWorld() {
+  return function (...args): string {
+    return "Hello World";
   };
 }
 
 /**
- * const counter = createCounter(5)
- * counter.increment(); // 6
- * counter.reset(); // 5
- * counter.decrement(); // 4
+ * const f = createHelloWorld();
+ * f(); // "Hello World"
  */
