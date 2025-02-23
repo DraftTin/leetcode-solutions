@@ -1,38 +1,48 @@
 package main
 
 func longestConsecutive(nums []int) int {
-	numDict := map[int]int{}
-	maxVal := 0
-	father := map[int]int{}
-	for i := 0; i < len(nums); i++ {
-		father[i] = i
+	mp := map[int]int{}
+	n := len(nums)
+	fathers := make([]int, n)
+	counter := make([]int, n)
+	for i := 0; i < n; i++ {
+		fathers[i] = i
+		counter[i] = 1
 	}
-	numDict[-1] = 0
-	for _, num := range nums {
-		if numDict[num] != 0 {
-			continue
+	ans := 0
+	for i, num := range nums {
+		if mp[num] == 0 {
+			mp[num] = i + 1
+			if mp[num-1] != 0 {
+				union(fathers, counter, mp[num]-1, mp[num-1]-1)
+			}
+			if mp[num+1] != 0 {
+				union(fathers, counter, mp[num]-1, mp[num+1]-1)
+			}
+			tmp := getCount(fathers, counter, i)
+			ans = max(ans, tmp)
 		}
-		f1, f2 := findFather(father, num-1), findFather(father, num+1)
-		numDict[num] = 1
-		if f1 != -1 {
-			numDict[num] += numDict[f1]
-			father[f1] = num
-		}
-		if f2 != -1 {
-			numDict[num] += numDict[f2]
-			father[f2] = num
-		}
-		maxVal = max(maxVal, numDict[num])
 	}
-	return maxVal
+	return ans
 }
 
-func findFather(father map[int]int, pos int) int {
-	if _, ok := father[pos]; ok == false {
-		return -1
+func union(fathers []int, counter []int, i, j int) {
+	pi := findFather(fathers, i)
+	pj := findFather(fathers, j)
+	fathers[pj] = pi
+	counter[pi] = counter[pi] + counter[pj]
+}
+
+func getCount(fathers []int, counter []int, i int) int {
+	p := findFather(fathers, i)
+	return counter[p]
+}
+
+func findFather(fathers []int, i int) int {
+	tmp := i
+	for fathers[i] != i {
+		i = fathers[i]
 	}
-	for father[pos] != pos {
-		father[pos] = findFather(father, father[pos])
-	}
-	return father[pos]
+	fathers[tmp] = i
+	return i
 }
