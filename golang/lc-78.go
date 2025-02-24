@@ -1,14 +1,16 @@
+package main
+
 func subsets(nums []int) [][]int {
-	ans := [][]int{[]int{}}
-	for _, num := range nums {
-		tmp := ans
-		for i, _ := range ans {
-			item := make([]int, len(ans[i])+1)
-			copy(item, ans[i])
-			item[len(item)-1] = num
-			tmp = append(tmp, item)
-		}
-		ans = tmp
-	}
+	ans := [][]int{}
+	dfs78(nums, 0, []int{}, &ans)
 	return ans
+}
+
+func dfs78(nums []int, curPos int, curVal []int, ans *[][]int) {
+	if curPos == len(nums) {
+		*ans = append(*ans, curVal)
+		return
+	}
+	dfs78(nums, curPos+1, curVal, ans)
+	dfs78(nums, curPos+1, append(curVal, nums[curPos]), ans)
 }

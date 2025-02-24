@@ -1,27 +1,27 @@
+package main
+
+import "sort"
+
 func combinationSum(candidates []int, target int) [][]int {
 	sort.Ints(candidates)
-	result := [][]int{}
-	curCombination := make([]int, 150)
-	if candidates[0] > target {
-		return result
-	}
-	dfs(candidates, 0, 0, target, &curCombination, 0, &result)
-	return result
+	ans := [][]int{}
+	dfs39(candidates, 0, target, &ans, &[]int{})
+	return ans
 }
 
-func dfs(candidates []int, pos, curSum, target int, curCombination *[]int, curPos int, result *[][]int) {
-	if curSum == target {
-		combination := make([]int, curPos)
-		copy(combination, *curCombination)
-		*result = append(*result, combination)
+func dfs39(candidates []int, curPos, target int, ans *[][]int, curAns *[]int) {
+	if target == 0 {
+		*ans = append(*ans, append([]int{}, (*curAns)...))
 		return
 	}
-	n := len(candidates)
-	for i := pos; i < n; i++ {
-		if curSum+candidates[i] > target {
-			return
-		}
-		(*curCombination)[curPos] = candidates[i]
-		dfs(candidates, i, curSum+candidates[i], target, curCombination, curPos+1, result)
+	if curPos == len(candidates) {
+		return
 	}
+	if candidates[curPos] > target {
+		return
+	}
+	dfs39(candidates, curPos+1, target, ans, curAns)
+	*curAns = append(*curAns, candidates[curPos])
+	dfs39(candidates, curPos, target-candidates[curPos], ans, curAns)
+	*curAns = (*curAns)[:len(*curAns)-1]
 }

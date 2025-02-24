@@ -18,15 +18,35 @@ func Constructor() WordDictionary {
 func (this *WordDictionary) AddWord(word string) {
 	cur := this.root
 	for _, c := range word {
-		if cur.Children[c - 'a'] == nil {
-			cur.Children[c - 'a'] = &TrieNode211{}
+		if cur.Children[c-'a'] == nil {
+			cur.Children[c-'a'] = &TrieNode211{}
 		}
-		cur = 
+		cur = cur.Children[c-'a']
 	}
+	cur.isWord = true
 }
 
 func (this *WordDictionary) Search(word string) bool {
-
+	cur := this.root
+	for i := 0; i < len(word); i++ {
+		if word[i] != '.' {
+			if cur.Children[word[i]-'a'] == nil {
+				return false
+			}
+			cur = cur.Children[word[i]-'a']
+		} else {
+			for j := 0; j < 26; j++ {
+				if cur.Children[j] != nil {
+					newDict := &WordDictionary{root: cur.Children[j]}
+					if newDict.Search(word[i+1:]) {
+						return true
+					}
+				}
+			}
+			return false
+		}
+	}
+	return cur.isWord
 }
 
 /**

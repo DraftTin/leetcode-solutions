@@ -1,3 +1,5 @@
+package main
+
 func exist(board [][]byte, word string) bool {
 	visited := make([][]bool, len(board))
 	for i := 0; i < len(visited); i++ {

@@ -1,48 +1,49 @@
-type TrieNode struct {
-	Children [26]*TrieNode
-	Val      string
-	IsPrefix bool
+package main
+
+type TrieNode208 struct {
+	Children [26]*TrieNode208
+	IsWord   bool
 }
 
 type Trie struct {
-	Root *TrieNode
+	Root *TrieNode208
 }
 
 func Constructor() Trie {
 	trie := Trie{}
-	trie.Root = &TrieNode{}
+	trie.Root = &TrieNode208{}
 	return trie
 }
 
 func (this *Trie) Insert(word string) {
-	node := this.Root
+	cur := this.Root
 	for _, c := range word {
-		if node.Children[c-'a'] == nil {
-			node.Children[c-'a'] = &TrieNode{Val: node.Val + string(c), IsPrefix: true}
+		if cur.Children[c-'a'] == nil {
+			cur.Children[c-'a'] = &TrieNode208{}
 		}
-		node = node.Children[c-'a']
+		cur = cur.Children[c-'a']
 	}
-	node.IsPrefix = false
+	cur.IsWord = true
 }
 
 func (this *Trie) Search(word string) bool {
-	node := this.Root
+	cur := this.Root
 	for _, c := range word {
-		if node.Children[c-'a'] == nil {
+		if cur.Children[c-'a'] == nil {
 			return false
 		}
-		node = node.Children[c-'a']
+		cur = cur.Children[c-'a']
 	}
-	return !node.IsPrefix
+	return cur.IsWord
 }
 
 func (this *Trie) StartsWith(prefix string) bool {
-	node := this.Root
+	cur := this.Root
 	for _, c := range prefix {
-		if node.Children[c-'a'] == nil {
+		if cur.Children[c-'a'] == nil {
 			return false
 		}
-		node = node.Children[c-'a']
+		cur = cur.Children[c-'a']
 	}
 	return true
 }

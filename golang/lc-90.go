@@ -1,3 +1,11 @@
+package main
+
+import (
+	"sort"
+	"strconv"
+	"strings"
+)
+
 func subsetsWithDup(nums []int) [][]int {
 	set := map[string]bool{"": true}
 	for i := 0; i < len(nums); i++ {
@@ -24,4 +32,3 @@ func subsetsWithDup(nums []int) [][]int {
 	}
 	return ans
 }
-
