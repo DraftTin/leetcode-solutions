@@ -1,3 +1,7 @@
+package main
+
+import "math"
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -7,15 +11,16 @@
  * }
  */
 func isValidBST(root *TreeNode) bool {
-	helper(root, math.MinInt64, math.MaxInt64)
+	return helper98(root, math.MinInt, math.MaxInt)
 }
 
-func helper(root *TreeNode, low int, high int) bool {
-	if root == nil {
+func helper98(node *TreeNode, leftBound, rightBound int) bool {
+	if node == nil {
 		return true
 	}
-	if root.Val <= low || root.Val >= high {
+	if node.Val <= leftBound || node.Val >= rightBound {
 		return false
 	}
-	return helper(root.Left, low, root.Val) && helper(root.Right, root.Val, high)
+	return helper98(node.Left, leftBound, node.Val) && helper98(node.Right, node.Val, rightBound)
+
 }

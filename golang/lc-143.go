@@ -1,3 +1,5 @@
+package main
+
 /**
  * Definition for singly-linked list.
  * type ListNode struct {
@@ -5,25 +7,24 @@
  *     Next *ListNode
  * }
  */
-func reorderList(head *ListNode)  {
-  nodes := []*ListNode{}
-  for head != nil {
-    nodes = append(nodes, head)
-    head = head.Next
-  }
-  i, j := 0, len(nodes) - 1
-  var newHead, pre *ListNode
-  for i <= j {
-    nodes[i].Next = nodes[j]
-    if newHead == nil {
-      newHead = nodes[i]
-    } else {
-      pre.Next = nodes[i]
-    }
-    pre = nodes[j]
-    nodes[j].Next = nil
-    i++
-    j--
-  }
-  head = newHead
+func reorderList(head *ListNode) {
+	nodeList := []*ListNode{}
+	p := head
+	for p != nil {
+		nodeList = append(nodeList, p)
+		p = p.Next
+	}
+	i, j := 0, len(nodeList)-1
+	var pre *ListNode
+	for i <= j {
+		nodeList[i].Next = nodeList[j]
+		if pre != nil {
+			pre.Next = nodeList[i]
+		}
+		pre = nodeList[j]
+		nodeList[j].Next = nil
+		i++
+		j--
+	}
+	head = nodeList[0]
 }

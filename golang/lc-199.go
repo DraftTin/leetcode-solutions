@@ -1,3 +1,5 @@
+package main
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -10,23 +12,23 @@ func rightSideView(root *TreeNode) []int {
 	if root == nil {
 		return []int{}
 	}
+	que := []*TreeNode{root}
 	size := 1
-	queue := []*TreeNode{root}
-	ans := []int{}
-	for len(queue) != 0 {
-		tmp := queue[0]
-		queue = queue[1:]
+	res := []int{}
+	for len(que) != 0 {
+		tmp := que[0]
+		que = que[1:]
 		if tmp.Left != nil {
-			queue = append(queue, tmp.Left)
+			que = append(que, tmp.Left)
 		}
 		if tmp.Right != nil {
-			queue = append(queue, tmp.Right)
+			que = append(que, tmp.Right)
 		}
 		size--
 		if size == 0 {
-			ans = append(ans, tmp.Val)
-			size = len(queue)
+			res = append(res, tmp.Val)
+			size = len(que)
 		}
 	}
-	return ans
+	return res
 }

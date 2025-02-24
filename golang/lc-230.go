@@ -1,3 +1,5 @@
+package main
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -7,7 +9,7 @@
  * }
  */
 func kthSmallest(root *TreeNode, k int) int {
-	ans, _ := helper(root, k)
+	_, ans := helper(root, k)
 	return ans
 }
 
@@ -15,12 +17,12 @@ func helper(root *TreeNode, k int) (int, int) {
 	if root == nil {
 		return 0, 0
 	}
-	lans, lcount := helper(root.Left, k)
-	if lcount >= k {
-		return lans, lcount
-	} else if lcount == k-1 {
-		return root.Val, k
+	lnum, lval := helper(root.Left, k)
+	if lnum+1 == k {
+		return lnum + 1, root.Val
+	} else if lnum >= k {
+		return lnum + 1, lval
 	}
-	rans, rcount := helper(root.Right, k-lcount-1)
-	return rans, rcount + lcount + 1
+	rnum, rval := helper(root.Right, k-lnum-1)
+	return rnum + lnum + 1, rval
 }

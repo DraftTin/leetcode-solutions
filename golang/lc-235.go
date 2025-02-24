@@ -9,36 +9,23 @@ package main
  * }
  */
 
-var ans *TreeNode
-
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
-	f1, f2 := -1, -1
-	if root == p {
-		f1 = 0
-	} else if findNode(root.Left, p) == true {
-		f1 = 1
-	} else {
-		f1 = 2
-	}
-	if root == q {
-		f2 = 0
-	} else if findNode(root.Left, q) == true {
-		f2 = 1
-	} else {
-		f2 = 2
-	}
-	if f1 != f2 {
-		ans = root
-	}
-	return ans
+	return helper235(root, p, q)
 }
 
-func findNode(root *TreeNode, node *TreeNode) bool {
+func helper235(root, p, q *TreeNode) *TreeNode {
 	if root == nil {
-		return false
+		return nil
 	}
-	if root == node {
-		return true
+	if root == p || root == q {
+		return root
 	}
-	return findNode(root.Left, node) || findNode(root.Right, node)
+	l := helper235(root.Left, p, q)
+	r := helper235(root.Right, p, q)
+	if l != nil && r != nil {
+		return root
+	} else if l == nil {
+		return r
+	}
+	return l
 }
