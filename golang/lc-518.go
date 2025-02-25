@@ -10,10 +10,10 @@ func change(amount int, coins []int) int {
 		dp[i] = make([]int, len(coins))
 		visited[i] = make([]bool, len(coins))
 	}
-	return dfs(amount, coins, 0, dp, visited)
+	return dfs518(amount, coins, 0, dp, visited)
 }
 
-func dfs(amount int, coins []int, pos int, dp [][]int, visited [][]bool) int {
+func dfs518(amount int, coins []int, pos int, dp [][]int, visited [][]bool) int {
 	if amount == 0 {
 		return 1
 	}
@@ -26,7 +26,7 @@ func dfs(amount int, coins []int, pos int, dp [][]int, visited [][]bool) int {
 	i := 0
 	count := 0
 	for i*coins[pos] <= amount {
-		count += dfs(amount-i*coins[pos], coins, pos+1, dp, visited)
+		count += dfs518(amount-i*coins[pos], coins, pos+1, dp, visited)
 		i++
 	}
 	dp[amount][pos] = count

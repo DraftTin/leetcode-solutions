@@ -1,32 +1,35 @@
 package main
 
 func findOrder(numCourses int, prerequisites [][]int) []int {
-	indegrees := make([]int, numCourses)
+	incount := make([]int, numCourses)
 	graph := make([][]int, numCourses)
-	for _, edge := range prerequisites {
-		indegrees[edge[0]]++
-		graph[edge[1]] = append(graph[edge[1]], edge[0])
+	for _, prerequisite := range prerequisites {
+		incount[prerequisite[0]]++
+		graph[prerequisite[1]] = append(graph[prerequisite[1]], prerequisite[0])
 	}
 	que := []int{}
-	for index, val := range indegrees {
-		if val == 0 {
-			que = append(que, index)
+	n := 0
+	for i, count := range incount {
+		if count == 0 {
+			n++
+			que = append(que, i)
 		}
 	}
-	outputOrder := make([]int, 0, numCourses)
+	res := []int{}
 	for len(que) != 0 {
-		course := que[0]
+		tmp := que[0]
 		que = que[1:]
-		outputOrder = append(outputOrder, course)
-		for _, c := range graph[course] {
-			indegrees[c]--
-			if indegrees[c] == 0 {
-				que = append(que, c)
+		res = append(res, tmp)
+		for _, course := range graph[tmp] {
+			incount[course]--
+			if incount[course] == 0 {
+				n++
+				que = append(que, course)
 			}
 		}
 	}
-	if len(outputOrder) != numCourses {
+	if n != numCourses {
 		return []int{}
 	}
-	return outputOrder
+	return res
 }

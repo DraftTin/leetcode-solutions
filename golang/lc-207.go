@@ -1,32 +1,35 @@
 package main
 
 func canFinish(numCourses int, prerequisites [][]int) bool {
-	indegrees := make([]int, numCourses)
+	// 0 unvisited 1 ok - no cycle, 2 - visiting
+	visited := make([]int, numCourses)
 	graph := make([][]int, numCourses)
-	for _, edge := range prerequisites {
-		indegrees[edge[1]]++
-		graph[edge[0]] = append(graph[edge[0]], edge[1])
+	for _, prerequisite := range prerequisites {
+		graph[prerequisite[0]] = append(graph[prerequisite[0]], prerequisite[1])
 	}
-	que := []int{}
-	for index, val := range indegrees {
-		if val == 0 {
-			que = append(que, index)
-		}
-	}
-	n := 0
-	for len(que) != 0 {
-		course := que[0]
-		que = que[1:]
-		n++
-		for _, c := range graph[course] {
-			indegrees[c]--
-			if indegrees[c] == 0 {
-				que = append(que, c)
+	for i := 0; i < numCourses; i++ {
+		if visited[i] == 0 {
+			if dfs207(graph, visited, i) == false {
+				return false
 			}
 		}
 	}
-	if n == numCourses {
-		return true
+	return true
+}
+
+func dfs207(graph [][]int, visited []int, curPos int) bool {
+	visited[curPos] = 2
+	for _, node := range graph[curPos] {
+		if visited[node] == 2 {
+			return false
+		}
+		if visited[node] == 0 {
+			res := dfs207(graph, visited, node)
+			if res == false {
+				return false
+			}
+		}
 	}
-	return false
+	visited[curPos] = 1
+	return true
 }

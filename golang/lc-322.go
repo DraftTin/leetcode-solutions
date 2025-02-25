@@ -1,3 +1,7 @@
+package main
+
+import "math"
+
 func coinChange(coins []int, amount int) int {
 	dp := make(map[int]int)
 	dp[0] = 0

@@ -1,3 +1,5 @@
+package main
+
 func numIslands(grid [][]byte) int {
 	count := 0
 	visited := make([][]bool, len(grid))
