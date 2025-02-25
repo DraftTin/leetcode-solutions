@@ -1,22 +1,22 @@
-func wordBreak(s string, wordDict []string) bool {
-	visited := make([]bool, len(s))
-	return helper(s, 0, wordDict, visited)
-}
+package main
 
-func helper(s string, i int, wordDict []string, visited []bool) bool {
-	if i == len(s) {
-		return true
-	}
-	if visited[i] == true {
-		return false
-	}
+func wordBreak(s string, wordDict []string) bool {
+	mp := map[string]bool{}
 	for _, word := range wordDict {
-		if len(word)+i <= len(s) && word == s[i:i+len(word)] {
-			if helper(s, i+len(word), wordDict, visited) {
-				return true
+		mp[word] = true
+	}
+	dp := make([]bool, len(s))
+	for i := 0; i < len(s); i++ {
+		if mp[s[:i+1]] == true {
+			dp[i] = true
+			continue
+		}
+		for j := 0; j < i; j++ {
+			if mp[s[j+1:i+1]] == true && dp[j] == true {
+				dp[i] = true
+				break
 			}
 		}
 	}
-	visited[i] = true
-	return false
+	return dp[len(s)-1]
 }

@@ -1,35 +1,25 @@
 package main
 
-import "sort"
-
 func change(amount int, coins []int) int {
-	sort.Ints(coins)
-	dp := make([][]int, amount+1)
-	visited := make([][]bool, amount+1)
+	dp := make([][]int, len(coins)+1)
+	for i := range dp {
+		dp[i] = make([]int, amount+1)
+	}
+	for i := 0; i < len(dp[0]); i++ {
+		dp[0][i] = 0
+	}
 	for i := 0; i < len(dp); i++ {
-		dp[i] = make([]int, len(coins))
-		visited[i] = make([]bool, len(coins))
+		dp[i][0] = 1
 	}
-	return dfs518(amount, coins, 0, dp, visited)
-}
-
-func dfs518(amount int, coins []int, pos int, dp [][]int, visited [][]bool) int {
-	if amount == 0 {
-		return 1
+	for i := 1; i <= len(coins); i++ {
+		for j := 1; j <= amount; j++ {
+			tmp := j
+			dp[i][j] = dp[i-1][tmp]
+			for tmp >= coins[i-1] {
+				tmp = tmp - coins[i-1]
+				dp[i][j] += dp[i-1][tmp]
+			}
+		}
 	}
-	if pos == len(coins) {
-		return 0
-	}
-	if visited[amount][pos] == true {
-		return dp[amount][pos]
-	}
-	i := 0
-	count := 0
-	for i*coins[pos] <= amount {
-		count += dfs518(amount-i*coins[pos], coins, pos+1, dp, visited)
-		i++
-	}
-	dp[amount][pos] = count
-	visited[amount][pos] = true
-	return count
+	return dp[len(coins)][amount]
 }
